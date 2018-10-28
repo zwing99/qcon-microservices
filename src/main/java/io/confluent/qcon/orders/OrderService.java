@@ -262,7 +262,21 @@ public class OrderService implements Service {
         setTimeout(timeout, asyncResponse);
 
         log.info("running GET on this node");
-        // TODO: Implement GET that only responds when there is an order with state VALIDATED or FAILED
+        try {
+            Order order = ordersStore().get(id);
+            if (order == null || (order.getState() != OrderState.VALIDATED && order.getState() != OrderState.FAILED)) {
+                log.info("Delaying get as a validated order not present for id " + id);
+                outstandingRequests.put(id, new FilteredResponse<>(asyncResponse,
+                        (k, v) -> (v.getState() == OrderState.VALIDATED || v.getState() == OrderState.FAILED)));
+            } else {
+                asyncResponse.resume(order);
+            }
+        } catch (InvalidStateStoreException e) {
+            //Store not ready so delay
+            log.info("Delaying request for " + id + " because state store is not ready.");
+            outstandingRequests.put(id, new FilteredResponse<>(asyncResponse,
+                    (k, v) -> (v.getState() == OrderState.VALIDATED || v.getState() == OrderState.FAILED)));
+        }
     }
 
     /**
