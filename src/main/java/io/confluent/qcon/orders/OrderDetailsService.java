@@ -77,7 +77,9 @@ public class OrderDetailsService implements Service {
                 for (ConsumerRecord<String, Order> record : records) {
                     Order order = record.value();
                     if (order.getState() == OrderState.CREATED) {
-                        //TODO: Validate the order then send the result
+                        //Validate the order then send the result
+                        OrderValidationResult validationResult = validate(order);
+                        producer.send(record(order.getId(), validationResult));
                     }
                 }
             }
