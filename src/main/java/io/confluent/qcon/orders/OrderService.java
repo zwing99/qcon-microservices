@@ -231,14 +231,14 @@ public class OrderService implements Service {
             Order order = ordersStore().get(id);
             if (order == null) {
                 log.info("Delaying get as order not present for id " + id);
-                outstandingRequests.put(id, new FilteredResponse<>(asyncResponse, (k, v) -> true));
+                outstandingRequests.put(id, new FilteredResponse<>(asyncResponse, (orderId, orderObj) -> true));
             } else {
                 asyncResponse.resume(order);
             }
         } catch (InvalidStateStoreException e) {
             //Store not ready so delay
             log.info("Delaying request for " + id + " because state store is not ready.");
-            outstandingRequests.put(id, new FilteredResponse<>(asyncResponse, (k, v) -> true));
+            outstandingRequests.put(id, new FilteredResponse<>(asyncResponse, (orderId, orderObj) -> true));
         }
     }
 
