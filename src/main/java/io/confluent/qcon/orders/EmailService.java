@@ -61,10 +61,8 @@ public class EmailService implements Service {
         // GlobalKTable to stream join takes three arguments: Table, mapping of stream (key,value) to table key for join
         // And the join function - takes values from stream and table and returns result
         orders.join(customers,
-                        //TODO: Function that returns Customer key (customerId) from (orderId, order) tuple
-                        ,
-                        //TODO: Function that returns an email tuple that we can use to send email notifications
-        )
+                        (orderID, order) -> order.getCustomerId(),
+                (order, customer) -> new EmailTuple(order,customer))
                 //Now for each tuple send an email.
                 .peek((key, emailTuple)
                         -> emailer.sendEmail(emailTuple)
