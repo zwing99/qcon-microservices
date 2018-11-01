@@ -1,5 +1,8 @@
 package io.confluent.qcon.orders.utils;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.streams.StreamsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,5 +49,21 @@ public class LoadConfigs {
         }
 
         return cfg;
+    }
+
+    public static Properties configStreams(String configFile, String stateDir, String serviceID) throws IOException {
+        Properties props = LoadConfigs.loadConfig(configFile);
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, serviceID);
+        props.put(StreamsConfig.STATE_DIR_CONFIG, stateDir);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+        // Recommended cloud configuration for Streams (basically, wait for longer before exiting if brokers disconnect)
+        props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
+        props.put(StreamsConfig.producerPrefix(ProducerConfig.RETRIES_CONFIG), 2147483647);
+        props.put("producer.confluent.batch.expiry.ms", 9223372036854775807L);
+        props.put(StreamsConfig.producerPrefix(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG), 300000);
+        props.put(StreamsConfig.producerPrefix(ProducerConfig.MAX_BLOCK_MS_CONFIG), 9223372036854775807L);
+
+        return props;
     }
 }

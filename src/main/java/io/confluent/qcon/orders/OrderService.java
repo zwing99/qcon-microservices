@@ -49,6 +49,7 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import static io.confluent.qcon.orders.utils.LoadConfigs.configStreams;
 import static io.confluent.qcon.orders.utils.MicroserviceShutdown.addShutdownHookAndBlock;
 
 /**
@@ -159,26 +160,11 @@ public class OrderService implements Service {
     private KafkaStreams startKStreams(String configFile, String stateDir) throws IOException {
         KafkaStreams streams = new KafkaStreams(
                 createOrdersMaterializedView().build(),
-                configStreams(configFile, stateDir));
+                configStreams(configFile, stateDir, SERVICE_APP_ID));
         streams.start();
         return streams;
     }
 
-    private Properties configStreams(String configFile, String stateDir) throws IOException {
-        Properties props = LoadConfigs.loadConfig(configFile);
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, SERVICE_APP_ID);
-        props.put(StreamsConfig.STATE_DIR_CONFIG, stateDir);
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-
-        // Recommended cloud configuration for Streams (basically, wait for longer before exiting if brokers disconnect)
-        props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
-        props.put(StreamsConfig.producerPrefix(ProducerConfig.RETRIES_CONFIG), 2147483647);
-        props.put("producer.confluent.batch.expiry.ms", 9223372036854775807L);
-        props.put(StreamsConfig.producerPrefix(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG), 300000);
-        props.put(StreamsConfig.producerPrefix(ProducerConfig.MAX_BLOCK_MS_CONFIG), 9223372036854775807L);
-
-        return props;
-    }
 
     /**
      * Create a table of orders which we can query. When the table is updated
