@@ -46,6 +46,30 @@ public class Order {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setState(OrderState state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -88,27 +112,4 @@ public class Order {
         return result;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
-    public void setState(OrderState state) {
-        this.state = state;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 }
