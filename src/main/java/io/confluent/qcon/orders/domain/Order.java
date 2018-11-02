@@ -29,10 +29,6 @@ public class Order {
         return state;
     }
 
-    public void setState(OrderState state) {
-        this.state = state;
-    }
-
     public String getCustomerId() {
         return customerId;
     }
