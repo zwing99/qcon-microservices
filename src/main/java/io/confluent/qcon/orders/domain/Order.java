@@ -22,9 +22,6 @@ public class Order {
         this.price = price;
     }
 
-
-
-
     public OrderState getState() {
         return state;
     }
