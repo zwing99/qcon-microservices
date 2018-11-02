@@ -2,8 +2,6 @@ package io.confluent.qcon.orders;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,21 +9,16 @@ import java.util.concurrent.TimeUnit;
 
 import io.confluent.qcon.orders.domain.Order;
 import io.confluent.qcon.orders.domain.OrderState;
-import io.confluent.qcon.orders.domain.OrderValidation;
 import io.confluent.qcon.orders.domain.OrderValidationResult;
-import io.confluent.qcon.orders.domain.OrderValidationType;
 import io.confluent.qcon.orders.domain.Schemas;
 import io.confluent.qcon.orders.utils.LoadConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.TopicPartition;
-import org.apache.kafka.common.protocol.types.Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +41,7 @@ public class OrderDetailsService implements Service {
     private final String CONSUMER_GROUP_ID = getClass().getSimpleName();
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private KafkaConsumer<String, Order> consumer;
-    private KafkaProducer<String, OrderValidation> producer;
+    private KafkaProducer<String, Order> producer;
     private boolean running;
 
     public void start(String configFile, String stateDir) {
@@ -77,9 +70,13 @@ public class OrderDetailsService implements Service {
                 for (ConsumerRecord<String, Order> record : records) {
                     Order order = record.value();
                     if (order.getState() == OrderState.CREATED) {
-                        //Validate the order then send the result
+
+                        // Validate the order (using validate())
                         OrderValidationResult validationResult = validate(order);
-                        producer.send(record(order.getId(), validationResult));
+                        // create a ProducerRecord from the order and result (see record())
+                        // then produce the result to Kafka using the existing producer
+                        producer.send(record(order, validationResult));
+
                     }
                 }
             }
@@ -109,12 +106,18 @@ public class OrderDetailsService implements Service {
         return  OrderValidationResult.PASS;
     }
 
-    private ProducerRecord<String, OrderValidation> record(String orderId,
+    private ProducerRecord<String, Order> record(Order order,
                                                            OrderValidationResult result) {
-        return new ProducerRecord<String, OrderValidation>(
-                Schemas.Topics.ORDER_VALIDATIONS.name(),
-                orderId,
-                new OrderValidation(orderId, OrderValidationType.DETAILS, result));
+
+        if (result.equals(OrderValidationResult.PASS))
+            order.setState(OrderState.VALIDATED);
+        else
+            order.setState(OrderState.FAILED);
+
+        return new ProducerRecord<String, Order>(
+                Schemas.Topics.ORDERS.name(),
+                order.getId(),
+                order);
     }
 
     private void startProducer(String configFile) throws IOException {
@@ -124,8 +127,8 @@ public class OrderDetailsService implements Service {
         producerConfig.put(ProducerConfig.CLIENT_ID_CONFIG, "order-details-service-producer");
 
         producer = new KafkaProducer<>(producerConfig,
-                Schemas.Topics.ORDER_VALIDATIONS.keySerde().serializer(),
-                Schemas.Topics.ORDER_VALIDATIONS.valueSerde().serializer());
+                Schemas.Topics.ORDERS.keySerde().serializer(),
+                Schemas.Topics.ORDERS.valueSerde().serializer());
     }
 
     private void startConsumer(String configFile) throws IOException {
