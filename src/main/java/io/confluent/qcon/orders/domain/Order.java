@@ -22,9 +22,6 @@ public class Order {
         this.price = price;
     }
 
-
-
-
     public OrderState getState() {
         return state;
     }
@@ -47,6 +44,30 @@ public class Order {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setState(OrderState state) {
+        this.state = state;
     }
 
     @Override
@@ -91,27 +112,4 @@ public class Order {
         return result;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
-    public void setState(OrderState state) {
-        this.state = state;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
 }

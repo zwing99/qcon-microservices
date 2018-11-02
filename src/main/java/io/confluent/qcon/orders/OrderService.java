@@ -262,7 +262,7 @@ public class OrderService implements Service {
         setTimeout(timeout, asyncResponse);
 
         log.info("running GET on this node");
-        // TODO: Implement GET that only responds when there is an order with state VALIDATED or FAILED
+        // TODO: Implement GET that only responds when there is an order with state VALIDATED
     }
 
     /**
