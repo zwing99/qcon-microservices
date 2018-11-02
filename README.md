@@ -71,9 +71,9 @@ to create a topic and produce/consume some events.
     - Stream-table join enrichment pattern
     - Global KTables
 8. *Lab 3* (if there is time):
-    - Still WIP
-    - Implement Stream-table join
-    - Test email service
+    - `git checkout lab3`
+    - Implement Stream-table join: Implement the two functions required for the join (marked as TODO)
+    - Test email service using the CustomerProducer and OrderProducer clases
 
 
 
