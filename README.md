@@ -66,8 +66,11 @@ to create a topic and produce/consume some events.
     - Code review of web-service
 6. **Lab 2:**
     - `git checkout lab2`
-    - Run and experiment with web service
+    - Run and experiment with web service:
+        - Build the service :) using `mvn clean install`        
+        - Use `scripts/run_lab2.sh` to experiment with the service. Running the script will start the Order service and validation service. Pressing any key will run few pre-canned `curl` commands that use the service. Another click will cause the services to exit.
     - Add "check for validation" endpoint: Implement the TODO part of the OrderService. Note that we already have a simple GET endpoint that gets any order, we need a new endpoint that only returns validated orders.
+    - Use the same script from earlier to experiment with the new endpoint.
     - **Extra Credit:** How would you scale to multiple instances?
 7. **Lesson 3** (if there is time): Simple email service
     - Stream-table join enrichment pattern
