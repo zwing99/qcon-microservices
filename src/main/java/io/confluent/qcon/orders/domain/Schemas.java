@@ -54,12 +54,6 @@ public class Schemas {
             }
         }
 
-        static public final class OrderValidationSerde extends Serdes.WrapperSerde<OrderValidation> {
-            public OrderValidationSerde() {
-                super(new JsonSerializer<OrderValidation>(), new JsonDeserializer<OrderValidation>(OrderValidation.class));
-            }
-        }
-
         static public final class CustomerSerde extends Serdes.WrapperSerde<Customer> {
             public CustomerSerde() {
                 super(new JsonSerializer<Customer>(), new JsonDeserializer<Customer>(Customer.class));
@@ -69,10 +63,8 @@ public class Schemas {
         public static Topic<String, Order> ORDERS =
                 new Topic<String, Order>("orders", Serdes.String(), new OrderSerde());
 
-        public static Topic<String, OrderValidation> ORDER_VALIDATIONS =
-                new Topic<String, OrderValidation>("order-validations", Serdes.String(), new OrderValidationSerde());
-
         public static Topic<String, Customer> CUSTOMERS =
                 new Topic<String, Customer>("customers", Serdes.String(), new CustomerSerde());
+
     }
 }
