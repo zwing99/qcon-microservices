@@ -78,7 +78,10 @@ to create a topic and produce/consume some events.
 8. **Lab 3** (if there is time):
     - `git checkout lab3`
     - Implement Stream-table join: Implement the two functions required for the join (marked as TODO)
-    - Test email service using the CustomerProducer and OrderProducer clases
-
+    - Test email service using the CustomerProducer and OrderProducer clases:
+       - Build the service :) using `mvn clean install`  
+       - Create a new topic `CUSTOMERS` for customer data
+       - `scripts/run_lab3.sh` will run the data generators, validator and email service
+       - You can write additional tests
 
 
