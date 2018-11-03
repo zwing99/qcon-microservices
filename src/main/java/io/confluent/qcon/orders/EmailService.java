@@ -82,7 +82,7 @@ public class EmailService implements Service {
         @Override
         public void sendEmail(EmailTuple details) {
             //In a real implementation we would do something a little more useful
-            log.warn("Sending an email to: \nCustomer: {} \n Order: {}", details.customer, details.order);
+            System.out.println("Sending an email to: \nCustomer:" + details.customer + "\n Order:" + details.order + "\n");
         }
     }
 
