@@ -1,7 +1,10 @@
 # qcon-microservices
 Example online orders app composed of event-driven microservices. Built for QCon workshop.
 
-This workshop will include:
+## Slides: 
+https://drive.google.com/file/d/1vq1tcLk4FWK7BKRG5cEhOzbeXoy65hUK/view
+
+## This workshop will include:
 
 - Create a Kafka cluster on Confluent Cloud
 - Create topics, produce and consume events from commandline
@@ -42,14 +45,14 @@ to create a topic and produce/consume some events.
 ## Outline
 
 1. **Lesson 0:** Introduction to Kafka, topics and events:
-    - What is Stream Processing?
-    - Key concepts of Kafka Brokers, Connectors and Streams
+    - What are event-driven microservices and why do we need them?
+    - Overview of our Architecture
+    - Key concepts of Apache Kafka
 2. **Lab 0:** 
     - Create a cluster in Confluent Cloud
     - Install the Confluent Cloud CLI
     - Create topic, produce and consume events from Cloud CLI
 3. **Lesson 1:** Simple event validation:
-    - Overview of our Architecture
     - "Hipster Stream Processing"
     - Producer and Consumer APIs
 4. **Lab 1:** 
@@ -58,11 +61,13 @@ to create a topic and produce/consume some events.
     - Validate events and produce results to Kafka: Implement the TODO part of the OrderValidationService. Note that `validate()` method implements the specific validation rules.
     - Build the service :) using `mvn clean install`
     - Test the simple validation service: Either using `scripts/run_lab1.sh`, writing a unit test, or a different method.
+    - **Extra credit:** Use a produce method with error handling.
+    - **Extra credit:** How would you use a rules engine?
     - **Extra credit:** How would you add multiple validators?
 5. **Lesson 2:** CQRS-based web-service with Kafka Streams
     - Introduction to Kafka Streams
     - Introducing local materialized views
-    - Interactive queries in Kafka Streams
+    - Stream-table duality
     - Code review of web-service
 6. **Lab 2:**
     - `git checkout lab2`
@@ -71,7 +76,8 @@ to create a topic and produce/consume some events.
         - Use `scripts/run_lab2.sh` to experiment with the service. Running the script will start the Order service and validation service. Pressing any key will run few pre-canned `curl` commands that use the service. Another click will cause the services to exit.
     - Add "check for validation" endpoint: Implement the TODO part of the OrderService. Note that we already have a simple GET endpoint that gets any order, we need a new endpoint that only returns validated orders.
     - Use the same script from earlier to experiment with the new endpoint.
-    - **Extra Credit:** How would you scale to multiple instances?
+    - **Extra Credit**: Implement blocking-POST that only returns after order was validated.
+    - **Extra Credit:** How would you scale to multiple instances? (Hint: Look up interactive queries APIs for Kafka Streams)
 7. **Lesson 3** (if there is time): Simple email service
     - Stream-table join enrichment pattern
     - Global KTables
