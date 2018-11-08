@@ -4,10 +4,10 @@
 trap 'kill $(jobs -p)' EXIT
 
 echo "NOTE: Starting validation service"
-java -cp target/uber-orders-service-1.0.0-SNAPSHOT.jar io.confluent.qcon.orders.OrderDetailsService &
+java --add-modules java.xml.bind -cp target/uber-orders-service-1.0.0-SNAPSHOT.jar io.confluent.qcon.orders.OrderDetailsService &
 
 echo "Note: Starting order service"
-java -cp target/uber-orders-service-1.0.0-SNAPSHOT.jar io.confluent.qcon.orders.OrderService &
+java --add-modules java.xml.bind -cp target/uber-orders-service-1.0.0-SNAPSHOT.jar io.confluent.qcon.orders.OrderService &
 
 read  -n 1 -p "Services started. Press any key to continue running few tests"
 
