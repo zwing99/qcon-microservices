@@ -57,7 +57,7 @@ to create a topic and produce/consume some events.
     - Producer and Consumer APIs
 4. **Lab 1:** 
     - `git checkout lab1`
-    - Create topic `ORDERS` with 3 partitions
+    - Create topic `orders` with 3 partitions
     - Validate events and produce results to Kafka: Implement the TODO part of the OrderValidationService. Note that `validate()` method implements the specific validation rules.
     - Build the service :) using `mvn clean install`
     - Test the simple validation service: Either using `scripts/run_lab1.sh`, writing a unit test, or a different method.
